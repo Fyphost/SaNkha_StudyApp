@@ -9,4 +9,5 @@ val SUBJECTS = listOf(
     SubjectSeed("Maths", 0xFFA26BFF, "\u03C0"),
     SubjectSeed("Biology", 0xFFFF5C8A, "\uD83E\uDDEC"),
     SubjectSeed("English", 0xFFFFB020, "\uD83D\uDCD6"),
+    SubjectSeed("Bangla", 0xFFFF7A45, "\u0985"),
 )

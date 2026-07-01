@@ -18,24 +18,29 @@ class NodeRepository(
     private val filesDir: File
         get() = File(context.filesDir, "files").apply { mkdirs() }
 
-    /** Seed the five subject folders if the database is empty. */
+    /** Seed any missing subject folders (safe to run on upgrades). */
     suspend fun seedIfNeeded() = withContext(Dispatchers.IO) {
-        if (dao.subjectCount() > 0) return@withContext
+        val existingSubjectNames = dao.getAll()
+            .filter { it.isSubject }
+            .map { it.name }
+            .toSet()
         val now = System.currentTimeMillis()
-        val seeds = SUBJECTS.map { s ->
-            NodeEntity(
-                id = UUID.randomUUID().toString(),
-                parentId = null,
-                name = s.name,
-                isFolder = true,
-                isSubject = true,
-                colorArgb = s.colorArgb,
-                icon = s.icon,
-                createdAt = now,
-                updatedAt = now,
-            )
-        }
-        dao.upsertAll(seeds)
+        val missing = SUBJECTS
+            .filter { it.name !in existingSubjectNames }
+            .map { s ->
+                NodeEntity(
+                    id = UUID.randomUUID().toString(),
+                    parentId = null,
+                    name = s.name,
+                    isFolder = true,
+                    isSubject = true,
+                    colorArgb = s.colorArgb,
+                    icon = s.icon,
+                    createdAt = now,
+                    updatedAt = now,
+                )
+            }
+        if (missing.isNotEmpty()) dao.upsertAll(missing)
     }
 
     suspend fun addFolder(parentId: String?, name: String) = withContext(Dispatchers.IO) {

@@ -3,6 +3,7 @@ name: Build Android APK
 on:
   push:
     branches: [ main ]
+    tags: [ 'v*' ]
   pull_request:
   workflow_dispatch:
 
@@ -47,12 +48,12 @@ jobs:
           path: SanKhadip-debug.apk
           if-no-files-found: error
 
-      - name: Publish to "latest" release
+      - name: Publish release
         if: github.event_name != 'pull_request'
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: latest
-          name: SanKhadip (latest build)
+          tag_name: ${{ github.ref_type == 'tag' && github.ref_name || 'latest' }}
+          name: ${{ github.ref_type == 'tag' && format('SanKhadip {0}', github.ref_name) || 'SanKhadip (latest build)' }}
           body: |
             Automatically built debug APK of SanKhadip.
 
@@ -61,4 +62,4 @@ jobs:
             2. Open it on your Android device.
             3. If prompted, allow installing apps from this source, then tap Install.
           files: SanKhadip-debug.apk
-          make_latest: true
+          make_latest: ${{ github.ref_type == 'tag' }}
