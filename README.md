@@ -1,42 +1,61 @@
-# SanKhadip — Study App
+# SanKhadip — Android Study App
 
 > _It's not over until I win._
 
-A dark, neon-blue study workspace to organize your notes and study material by
-subject. Built with **React + TypeScript + Vite**, with everything stored
-locally in your browser via **IndexedDB** (works offline, nothing leaves your
-device).
+A native Android app to organize your study material by subject, with a dark
+neon-blue theme inspired by the SanKhadip badge. Built with **Kotlin**,
+**Jetpack Compose** (Material 3) and **Room**.
 
 ## Features
 
 - **5 fixed subject folders**: Physics, Chemistry, Maths, Biology, English
-  (these can't be deleted or renamed — they're your base subjects).
+  (each with its own accent color; they can't be deleted or renamed).
 - **Nested folders** — create and delete subfolders inside any subject
-  (e.g. `Physics → Vector Physics`), as deep as you like.
-- **File management** — upload files (drag & drop or picker), rename, delete,
-  download, and preview.
-- **In-app preview** for images, PDFs, video, audio, and text files.
-- **Search** within the current folder.
-- **Rotating motivational quotes** in the header.
-- **Persistent storage** — your folders and files survive page reloads.
+  (e.g. `Physics → Vector Physics`), at any depth.
+- **File management** — upload files from the device (Storage Access
+  Framework), rename, delete, and open them with an external viewer.
+- **Persistent storage** — folder/file metadata in Room; uploaded files are
+  copied into the app's private internal storage.
+- **Breadcrumb navigation**, in-folder **search**, and rotating motivational
+  quotes in the header.
 
-## Getting started
+## Tech stack
+
+| Area        | Choice                                   |
+|-------------|------------------------------------------|
+| Language    | Kotlin                                   |
+| UI          | Jetpack Compose + Material 3             |
+| Persistence | Room (SQLite) + internal file storage    |
+| Min / Target SDK | 24 / 34                             |
+| Build       | Gradle (Kotlin DSL) + version catalog    |
+
+## Project structure
+
+```
+app/src/main/java/com/fyphost/sankhadip/
+├── SanKhadipApp.kt          # Application + manual DI
+├── MainActivity.kt          # Compose entry point
+├── data/                    # Room entity, DAO, database, repository, subjects
+└── ui/                      # ViewModel, Compose screens, components, theme
+```
+
+## Building
+
+Open the project in **Android Studio** (Giraffe or newer), let it sync, then
+run on an emulator or device. From the command line:
 
 ```bash
-npm install
-npm run dev      # start the dev server
-npm run build    # production build
-npm run preview  # preview the production build
+./gradlew :app:assembleDebug
 ```
+
+The debug APK is produced at
+`app/build/outputs/apk/debug/app-debug.apk`.
+
+> Requires JDK 17–21 and the Android SDK (compileSdk 34, build-tools 34.0.0).
+> `local.properties` with `sdk.dir` is created automatically by Android Studio.
 
 ## Using your own logo
 
-The header shows an SVG recreation of the SanKhadip badge by default. To use the
-real logo, drop your image at **`public/logo.png`** and it will be picked up
-automatically.
-
-## Tech notes
-
-- Data model: a single IndexedDB object store (`nodes`) holding a tree of
-  folder/file records. Files are stored as `Blob`s alongside their metadata.
-- No backend required — this is a fully client-side app.
+The header and launcher icon use a built-in neon "S" badge. To use the real
+SanKhadip artwork, replace the launcher icon via Android Studio's Image Asset
+tool (or swap `app/src/main/res/drawable/ic_launcher.xml`).
