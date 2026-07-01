@@ -1,5 +1,6 @@
 package com.fyphost.sankhadip.ui
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -41,13 +42,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.fyphost.sankhadip.R
 import com.fyphost.sankhadip.data.NodeEntity
 import com.fyphost.sankhadip.ui.theme.BorderBlue
 import com.fyphost.sankhadip.ui.theme.NeonBlue
@@ -59,25 +62,15 @@ fun accentOf(node: NodeEntity, fallback: Color): Color =
 
 @Composable
 fun LogoBadge(size: Int = 44) {
-    Box(
+    Image(
+        painter = painterResource(R.drawable.ic_logo),
+        contentDescription = "SanKhadip logo",
+        contentScale = ContentScale.Crop,
         modifier = Modifier
             .size(size.dp)
             .clip(CircleShape)
-            .background(
-                Brush.radialGradient(
-                    colors = listOf(Color(0xFF0A2A55), Color(0xFF02040A)),
-                ),
-            )
             .border(1.5.dp, NeonBlue, CircleShape),
-        contentAlignment = Alignment.Center,
-    ) {
-        Text(
-            text = "S",
-            color = Color(0xFF7FD0FF),
-            fontSize = (size * 0.5).sp,
-            fontWeight = FontWeight.ExtraBold,
-        )
-    }
+    )
 }
 
 @Composable
